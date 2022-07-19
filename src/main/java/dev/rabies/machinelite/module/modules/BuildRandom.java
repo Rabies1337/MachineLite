@@ -4,7 +4,7 @@ import dev.rabies.machinelite.event.Event;
 import dev.rabies.machinelite.event.impl.UpdateEvent;
 import dev.rabies.machinelite.module.Module;
 import dev.rabies.machinelite.utils.TimerUtil;
-import dev.rabies.machinelite.utils.Utils;
+import dev.rabies.machinelite.utils.MiscUtils;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemSkull;
 import net.minecraft.item.ItemStack;
@@ -41,7 +41,7 @@ public class BuildRandom extends Module {
     private boolean tryToPlaceBlock(double reach, BlockPos pos) {
         if (pos == null) return false;
         if (!mc.world.getBlockState(pos).getMaterial().isReplaceable()) return false;
-        if (Utils.placeBlock(reach, pos)) {
+        if (MiscUtils.placeBlock(reach, pos)) {
             timer.reset();
             return true;
         }

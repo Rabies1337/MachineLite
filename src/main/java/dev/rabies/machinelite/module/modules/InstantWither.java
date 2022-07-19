@@ -4,7 +4,7 @@ import dev.rabies.machinelite.event.Event;
 import dev.rabies.machinelite.event.impl.RightClickMouseEvent;
 import dev.rabies.machinelite.event.impl.UpdateEvent;
 import dev.rabies.machinelite.module.Module;
-import dev.rabies.machinelite.utils.Utils;
+import dev.rabies.machinelite.utils.MiscUtils;
 import net.minecraft.block.material.Material;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
@@ -41,8 +41,8 @@ public class InstantWither extends Module {
             byte b;
             int i;
 
-            int sandSlot = Utils.getItemSlotByToolBar(Item.getItemFromBlock(Blocks.SOUL_SAND));
-            int skullSlot = Utils.getItemSlotByToolBar(Item.getItemById(397));
+            int sandSlot = MiscUtils.getItemSlotByToolBar(Item.getItemFromBlock(Blocks.SOUL_SAND));
+            int skullSlot = MiscUtils.getItemSlotByToolBar(Item.getItemById(397));
 
             if (sandSlot != -1) {
                 offset = new int[][]{new int[3], {0, 1, 0}, {1, 1, 0}, {-1, 1, 0}};
@@ -69,9 +69,9 @@ public class InstantWither extends Module {
 
     private void placeBlocks(BlockPos pos, int slot) {
         if (mc.world.getBlockState(pos).getMaterial().isReplaceable()) {
-            Utils.switchItem(slot);
-            Utils.placeBlock(4, pos);
-            Utils.switchItem(lastSlot);
+            MiscUtils.switchItem(slot);
+            MiscUtils.placeBlock(4, pos);
+            MiscUtils.switchItem(lastSlot);
             delay = 2;
         }
     }

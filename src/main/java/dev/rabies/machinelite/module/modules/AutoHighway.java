@@ -3,7 +3,7 @@ package dev.rabies.machinelite.module.modules;
 import dev.rabies.machinelite.event.Event;
 import dev.rabies.machinelite.event.impl.UpdateEvent;
 import dev.rabies.machinelite.module.Module;
-import dev.rabies.machinelite.utils.Utils;
+import dev.rabies.machinelite.utils.MiscUtils;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
@@ -35,7 +35,7 @@ public class AutoHighway extends Module {
             BlockPos originPos = new BlockPos(playerPos.x, playerPos.y + 0.5f, playerPos.z);
 
             if (positions.isEmpty()) {
-                switch (Utils.getFacing()) {
+                switch (MiscUtils.getFacing()) {
                     case EAST:
                         positions.add(originPos.down());
                         positions.add(originPos.down().east());
@@ -90,7 +90,7 @@ public class AutoHighway extends Module {
             if (positions.size() <= 64) {
                 for (BlockPos pos : positions) {
                     if (!mc.world.getBlockState(pos).getMaterial().isReplaceable()) continue;
-                    Utils.placeBlock(4, pos);
+                    MiscUtils.placeBlock(4, pos);
                 }
                 positions.clear();
             }

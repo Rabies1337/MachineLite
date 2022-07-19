@@ -16,7 +16,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 
-public class Utils implements IMC {
+public class MiscUtils implements IMC {
 
     public static void switchItem(int slot) {
         if (mc.player.inventory.currentItem != slot) {
@@ -27,18 +27,16 @@ public class Utils implements IMC {
     }
 
     public static int getItemSlotByToolBar(Item itemIn) {
-        for (byte slot = 0; slot < 9; slot++) {
+        for (int slot = 0; slot < 9; slot++) {
             ItemStack itemStack = mc.player.inventory.mainInventory.get(slot);
-            if (itemStack.getItem() == itemIn) {
-                return slot;
-            }
+            if (itemStack.getItem() != itemIn) continue;
+            return slot;
         }
-
         return -1;
     }
 
     public static EnumFacing getFacing() {
-        switch (MathHelper.floor((double) (mc.player.rotationYaw * 8.0F / 360.0F) + 0.5D) & 7) {
+        switch (MathHelper.floor((mc.player.rotationYaw * 8.0 / 360.0) + 0.5) & 7) {
             case 0:
             case 1:
                 return EnumFacing.SOUTH;
@@ -66,8 +64,8 @@ public class Utils implements IMC {
                 final Vec3d dirVec = new Vec3d(facing.getDirectionVec());
                 final Vec3d hitVec = posVec.add(dirVec.scale(0.5));
                 if (eyesPos.squareDistanceTo(hitVec) <= Math.pow(6.0, 2.0)) {
-                    float[] rotations = Utils.getNeededRotations(hitVec);
-                    RayTraceResult traceResult = Utils.rayTraceBlocks(reach, rotations[0], rotations[1]);
+                    float[] rotations = RotationUtil.getNeededRotations(hitVec);
+                    RayTraceResult traceResult = MiscUtils.rayTraceBlocks(reach, rotations[0], rotations[1]);
 
                     if (traceResult.sideHit != null && traceResult.hitVec != null && traceResult.typeOfHit == RayTraceResult.Type.BLOCK) {
                         if (isBlockContainer(mc.world.getBlockState(neighbor).getBlock())) {
@@ -94,28 +92,9 @@ public class Utils implements IMC {
         return false;
     }
 
-    public static float[] getNeededRotations(Vec3d vec) {
-        Vec3d eyesPos = new Vec3d(mc.player.posX, mc.player.posY + mc.player.getEyeHeight(), mc.player.posZ);
-        double diffX = vec.x - eyesPos.x;
-        double diffY = vec.y - eyesPos.y;
-        double diffZ = vec.z - eyesPos.z;
-        double diffXZ = Math.sqrt(diffX * diffX + diffZ * diffZ);
-        float yaw = mc.player.rotationYaw + MathHelper.wrapDegrees((float) Math.toDegrees(Math.atan2(diffZ, diffX)) - 90F - mc.player.rotationYaw);
-        float pitch = mc.player.rotationPitch + MathHelper.wrapDegrees((float) -Math.toDegrees(Math.atan2(diffY, diffXZ)) - mc.player.rotationPitch);
-        return new float[]{yaw, pitch};
-    }
-
-    public static Vec3d getVectorForRotation(float pitch, float yaw) {
-        float f = MathHelper.cos(-yaw * 0.017453292F - (float) Math.PI);
-        float f1 = MathHelper.sin(-yaw * 0.017453292F - (float) Math.PI);
-        float f2 = -MathHelper.cos(-pitch * 0.017453292F);
-        float f3 = MathHelper.sin(-pitch * 0.017453292F);
-        return new Vec3d(f1 * f2, f3, f * f2);
-    }
-
     public static RayTraceResult rayTraceBlocks(double reach, float yaw, float pitch) {
         Vec3d vec3 = mc.player.getPositionEyes(1.0f);
-        Vec3d vec4 = Utils.getVectorForRotation(pitch, yaw);
+        Vec3d vec4 = RotationUtil.getVectorForRotation(pitch, yaw);
         Vec3d vec5 = vec3.add(vec4.x * reach, vec4.y * reach, vec4.z * reach);
         return mc.player.world.rayTraceBlocks(vec3, vec5, false, false, true);
     }

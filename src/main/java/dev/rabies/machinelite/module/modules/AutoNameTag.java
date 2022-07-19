@@ -4,7 +4,8 @@ import dev.rabies.machinelite.MachineLiteMod;
 import dev.rabies.machinelite.event.Event;
 import dev.rabies.machinelite.event.impl.UpdateEvent;
 import dev.rabies.machinelite.module.Module;
-import dev.rabies.machinelite.utils.Utils;
+import dev.rabies.machinelite.utils.RotationUtil;
+import dev.rabies.machinelite.utils.MiscUtils;
 import joptsimple.internal.Strings;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -43,7 +44,7 @@ public class AutoNameTag extends Module {
             target = !targets.isEmpty() ? targets.get(0) : null;
             if (target != null) return;
 
-            int tagSlot = (mc.player.getHeldItemMainhand().getItem() == Item.getItemById(421)) ? mc.player.inventory.currentItem : Utils.getItemSlotByToolBar(Item.getItemById(421));
+            int tagSlot = (mc.player.getHeldItemMainhand().getItem() == Item.getItemById(421)) ? mc.player.inventory.currentItem : MiscUtils.getItemSlotByToolBar(Item.getItemById(421));
             if (tagSlot == -1) return;
 
             int lastSlot = mc.player.inventory.currentItem;
@@ -52,11 +53,11 @@ public class AutoNameTag extends Module {
             // "ghosthax" の部分を変更して自分の名前にすることが出来ますconfigはありませんコンパイルしてください
             if (!check0(target, currentItemStack.getDisplayName(), "ghosthax")) return;
 
-            Utils.switchItem(tagSlot);
+            MiscUtils.switchItem(tagSlot);
 
             AxisAlignedBB boundingBox = target.getEntityBoundingBox();
             Vec3d vec3d = new Vec3d((boundingBox.minX + boundingBox.maxX) / 2.0D, boundingBox.minY + (boundingBox.maxY - boundingBox.minY) / 100.0D * 70, (boundingBox.minZ + boundingBox.maxZ) / 2.0D);
-            float[] rotations = Utils.getNeededRotations(vec3d);
+            float[] rotations = RotationUtil.getNeededRotations(vec3d);
             // 回転のパケットを送ってターゲットの方向を向く (eventでEntityPlayerSPを変更する方が安定するけどめんどくさいのでパス)
             mc.player.connection.sendPacket(new CPacketPlayer.Rotation(rotations[0], rotations[1], mc.player.onGround));
 
@@ -65,7 +66,7 @@ public class AutoNameTag extends Module {
                 MachineLiteMod.writeChat("Tagged " + target.getName());
             }
 
-            Utils.switchItem(lastSlot);
+            MiscUtils.switchItem(lastSlot);
         }
     }
 

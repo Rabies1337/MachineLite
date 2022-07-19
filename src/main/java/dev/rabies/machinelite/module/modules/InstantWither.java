@@ -1,4 +1,4 @@
-package dev.rabies.machinelite.module.impl;
+package dev.rabies.machinelite.module.modules;
 
 import dev.rabies.machinelite.event.Event;
 import dev.rabies.machinelite.event.impl.RightClickMouseEvent;
@@ -13,6 +13,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 
 public class InstantWither extends Module {
+
     private int delay, lastSlot;
 
     public InstantWither(String name, int keyCode) {

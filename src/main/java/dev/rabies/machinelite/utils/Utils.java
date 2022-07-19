@@ -1,7 +1,7 @@
 package dev.rabies.machinelite.utils;
 
-import dev.rabies.machinelite.MachineLite;
-import dev.rabies.machinelite.module.impl.AntiGhostBlock;
+import dev.rabies.machinelite.MachineLiteMod;
+import dev.rabies.machinelite.module.modules.AntiGhostBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockAnvil;
 import net.minecraft.block.BlockContainer;
@@ -17,6 +17,7 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 
 public class Utils implements IMC {
+
     public static void switchItem(int slot) {
         if (mc.player.inventory.currentItem != slot) {
             mc.player.inventory.currentItem = slot;
@@ -81,7 +82,7 @@ public class Utils implements IMC {
                             mc.player.connection.sendPacket(new CPacketEntityAction(mc.player, CPacketEntityAction.Action.STOP_SNEAKING));
                         }
 
-                        if (MachineLite.getModuleManager().isEnabled(AntiGhostBlock.class)) {
+                        if (MachineLiteMod.getModuleManager().isEnabled(AntiGhostBlock.class)) {
                             mc.player.connection.sendPacket(new CPacketPlayerTryUseItemOnBlock(neighbor, facing.getOpposite(), EnumHand.MAIN_HAND, 0, 0, 0));
                         }
                         return true;

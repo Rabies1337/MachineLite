@@ -1,4 +1,4 @@
-package dev.rabies.machinelite.module.impl;
+package dev.rabies.machinelite.module.modules;
 
 import dev.rabies.machinelite.event.Event;
 import dev.rabies.machinelite.event.impl.UpdateEvent;
@@ -12,6 +12,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 
 public class FloorBuilder extends Module {
+
     private final TimerUtil timer;
 
     public FloorBuilder(String name, int keyCode) {
@@ -22,9 +23,7 @@ public class FloorBuilder extends Module {
     @Override
     public void onEvent(Event event) {
         if (event instanceof UpdateEvent) {
-            if (!checkHeldItem()) {
-                return;
-            }
+            if (!checkHeldItem()) return;
 
             Vec3d vec3d = mc.player.getPositionVector();
             BlockPos originPos = new BlockPos(vec3d.x, vec3d.y - 1, vec3d.z);
@@ -35,8 +34,8 @@ public class FloorBuilder extends Module {
             for (int x = posX - range; x <= posX + range; x++) {
                 for (int z = posZ - range; z <= posZ + range; z++) {
                     if (timer.delay(80)) {
-                        final BlockPos nigger = new BlockPos(x, originPos.getY(), z);
-                        this.tryToPlaceBlock(range, nigger);
+                        final BlockPos floorPos = new BlockPos(x, originPos.getY(), z);
+                        tryToPlaceBlock(range, floorPos);
                     }
                 }
             }
@@ -44,10 +43,8 @@ public class FloorBuilder extends Module {
     }
 
     private void tryToPlaceBlock(double reach, BlockPos pos) {
-        if (pos == null || !mc.world.getBlockState(pos).getMaterial().isReplaceable()) {
-            return;
-        }
-
+        if (pos == null) return;
+        if (!mc.world.getBlockState(pos).getMaterial().isReplaceable()) return;
         if (Utils.placeBlock(reach, pos)) {
             timer.reset();
         }

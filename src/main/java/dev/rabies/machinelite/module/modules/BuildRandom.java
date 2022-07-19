@@ -1,4 +1,4 @@
-package dev.rabies.machinelite.module.impl;
+package dev.rabies.machinelite.module.modules;
 
 import dev.rabies.machinelite.event.Event;
 import dev.rabies.machinelite.event.impl.UpdateEvent;
@@ -13,6 +13,7 @@ import net.minecraft.util.math.BlockPos;
 import java.util.Random;
 
 public class BuildRandom extends Module {
+
     private final Random random;
     private final TimerUtil timer;
 
@@ -30,30 +31,20 @@ public class BuildRandom extends Module {
             int attempts = 0;
             BlockPos pos;
 
-            if (!checkHeldItem()) {
-                return;
-            }
-
-            try {
-                do {
-                    pos = new BlockPos(mc.player.getPosition()).add(random.nextInt(bound) - range, random.nextInt(bound) - range, random.nextInt(bound) - range);
-                } while (++attempts < 128 && timer.delay(80) && !tryToPlaceBlock(range, pos));
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            if (!checkHeldItem()) return;
+            do {
+                pos = new BlockPos(mc.player.getPosition()).add(random.nextInt(bound) - range, random.nextInt(bound) - range, random.nextInt(bound) - range);
+            } while (++attempts < 128 && timer.delay(80) && !tryToPlaceBlock(range, pos));
         }
     }
 
     private boolean tryToPlaceBlock(double reach, BlockPos pos) {
-        if (pos == null || !mc.world.getBlockState(pos).getMaterial().isReplaceable()) {
-            return false;
-        }
-
+        if (pos == null) return false;
+        if (!mc.world.getBlockState(pos).getMaterial().isReplaceable()) return false;
         if (Utils.placeBlock(reach, pos)) {
             timer.reset();
             return true;
         }
-
         return false;
     }
 

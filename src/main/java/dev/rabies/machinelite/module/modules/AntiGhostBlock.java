@@ -1,4 +1,4 @@
-package dev.rabies.machinelite.module.impl;
+package dev.rabies.machinelite.module.modules;
 
 import dev.rabies.machinelite.event.Event;
 import dev.rabies.machinelite.event.impl.EventBreakBlock;
@@ -7,6 +7,7 @@ import net.minecraft.network.play.client.CPacketPlayerDigging;
 import net.minecraft.util.EnumFacing;
 
 public class AntiGhostBlock extends Module {
+
     public AntiGhostBlock(String name, int keyCode) {
         super(name, keyCode);
     }
@@ -14,7 +15,12 @@ public class AntiGhostBlock extends Module {
     @Override
     public void onEvent(Event event) {
         if (event instanceof EventBreakBlock) {
-            mc.player.connection.sendPacket(new CPacketPlayerDigging(CPacketPlayerDigging.Action.ABORT_DESTROY_BLOCK, ((EventBreakBlock) event).getPos(), EnumFacing.UP));
+            // アクションを送ってブロックが存在しているかをチェック
+            mc.player.connection.sendPacket(new CPacketPlayerDigging(
+                    CPacketPlayerDigging.Action.ABORT_DESTROY_BLOCK,
+                    ((EventBreakBlock) event).getPos(),
+                    EnumFacing.UP
+            ));
         }
     }
 }

@@ -1,38 +1,26 @@
 package dev.rabies.machinelite.event;
 
-import java.util.ConcurrentModificationException;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public class EventManager {
-    protected List<Listener> contents;
-
-    public void initialize() {
-        this.contents = new CopyOnWriteArrayList<>();
-    }
+    protected List<EventListener> contents = new CopyOnWriteArrayList<>();
 
     public void call(Event event) {
-        if (this.contents != null)
-            try {
-                for (Listener listener : this.contents) {
-                    if (listener != null) {
-                        listener.onEvent(event);
-                    }
-                }
-            } catch (ConcurrentModificationException | java.util.NoSuchElementException var4) {
-                var4.printStackTrace();
-            }
-    }
-
-    public void register(Listener listener) {
-        if (!this.contents.contains(listener)) {
-            this.contents.add(listener);
+        if (contents == null) return;
+        for (EventListener listener : contents) {
+            if (listener == null) continue;
+            listener.onEvent(event);
         }
     }
 
-    public void unregister(Listener listener) {
-        if (this.contents.contains(listener)) {
-            this.contents.remove(listener);
-        }
+    public void register(EventListener eventListener) {
+        if (contents.contains(eventListener)) return;
+        contents.add(eventListener);
+    }
+
+    public void unregister(EventListener eventListener) {
+        if (!contents.contains(eventListener)) return;
+        contents.remove(eventListener);
     }
 }

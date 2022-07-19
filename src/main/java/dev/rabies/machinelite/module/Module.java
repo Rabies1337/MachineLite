@@ -1,14 +1,19 @@
 package dev.rabies.machinelite.module;
 
-import dev.rabies.machinelite.MachineLite;
-import dev.rabies.machinelite.event.Event;
-import dev.rabies.machinelite.event.Listener;
+import dev.rabies.machinelite.MachineLiteMod;
+import dev.rabies.machinelite.event.EventListener;
 import dev.rabies.machinelite.utils.IMC;
+import lombok.Getter;
+import lombok.Setter;
 import net.minecraftforge.common.MinecraftForge;
 
-public class Module implements IMC, Listener {
+public abstract class Module implements IMC, EventListener {
+
+    @Getter @Setter
     public String name;
+    @Getter @Setter
     public int keyCode;
+    @Getter
     public boolean enabled;
 
     public Module(String name, int keyCode) {
@@ -17,55 +22,35 @@ public class Module implements IMC, Listener {
     }
 
     public void toggle() {
-        this.enabled = !this.enabled;
+        enabled = !enabled;
         if (enabled) {
-            this.setEnable();
-            MachineLite.WriteChat("\247aEnabled \2477" + this.getName());
+            setEnable();
+            MachineLiteMod.writeChat("\247aEnabled \2477" + getName());
         } else {
-            this.setDisable();
-            MachineLite.WriteChat("\247cDisabled \2477" + this.getName());
+            setDisable();
+            MachineLiteMod.writeChat("\247cDisabled \2477" + getName());
         }
     }
 
     public void setEnable() {
-        this.enabled = true;
-        this.onEnabled();
+        onEnabled();
         MinecraftForge.EVENT_BUS.register(this);
-        MachineLite.getEventManager().register(this);
-        MachineLite.getProfile().saveFile();
+        MachineLiteMod.getEventManager().register(this);
+        MachineLiteMod.getConfig().saveConfig();
     }
 
     public void setDisable() {
-        this.enabled = false;
-        this.onDisabled();
+        onDisabled();
         MinecraftForge.EVENT_BUS.unregister(this);
-        MachineLite.getEventManager().unregister(this);
-        MachineLite.getProfile().saveFile();
+        MachineLiteMod.getEventManager().unregister(this);
+        MachineLiteMod.getConfig().saveConfig();
     }
 
-    public void onEnabled() {}
-
-    public void onDisabled() {}
-
-    public void onEvent(Event event) {}
-
-    public boolean isEnabled() {
-        return enabled;
+    public void onEnabled() {
+        enabled = true;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public int getKeyCode() {
-        return keyCode;
-    }
-
-    public void setKeyCode(int keyCode) {
-        this.keyCode = keyCode;
+    public void onDisabled() {
+        enabled = false;
     }
 }

@@ -1,8 +1,6 @@
 package dev.rabies.machinelite.mixin;
 
 import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.launch.MixinBootstrap;
 import org.spongepowered.asm.mixin.MixinEnvironment;
@@ -11,9 +9,10 @@ import org.spongepowered.asm.mixin.Mixins;
 import java.util.Map;
 
 public class MixinLoaderForge implements IFMLLoadingPlugin {
+
     public MixinLoaderForge() {
         MixinBootstrap.init();
-        Mixins.addConfigurations("mixins.lite.json");
+        Mixins.addConfigurations("mixins.machinelite.json");
         MixinEnvironment.getDefaultEnvironment().setObfuscationContext("searge");
     }
 

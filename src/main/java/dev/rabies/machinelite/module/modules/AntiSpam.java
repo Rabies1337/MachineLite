@@ -1,4 +1,4 @@
-package dev.rabies.machinelite.module.impl;
+package dev.rabies.machinelite.module.modules;
 
 import dev.rabies.machinelite.event.Event;
 import dev.rabies.machinelite.event.impl.ChatInputEvent;
@@ -12,7 +12,9 @@ import net.minecraft.util.text.ITextComponent;
 
 import java.util.List;
 
+// Wurst
 public class AntiSpam extends Module {
+
     public AntiSpam(String name, int keyCode) {
         super(name, keyCode);
     }

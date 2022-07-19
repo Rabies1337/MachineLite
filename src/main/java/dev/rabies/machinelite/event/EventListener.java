@@ -1,5 +1,7 @@
 package dev.rabies.machinelite.event;
 
-public interface Listener {
+public interface EventListener {
+
     void onEvent(Event event);
+
 }

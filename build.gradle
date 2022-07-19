@@ -25,7 +25,7 @@ apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'org.spongepowered.mixin'
 
 version = project.version
-group = 'com.lite'
+group = 'dev.rabies'
 
 compileJava {
     sourceCompatibility = targetCompatibility = '1.8'
@@ -52,7 +52,7 @@ minecraft {
         client {
             workingDirectory project.file('run')
 
-            property 'fml.coreMods.load', 'com.lite.machinelite.mixin.MixinLoaderForge'
+            property 'fml.coreMods.load', 'dev.rabies.machinelite.mixin.MixinLoaderForge'
             property 'mixin.env.disableRefMap', 'true'
             property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
             property 'forge.logging.console.level', 'debug'
@@ -98,7 +98,7 @@ dependencies {
 
 mixin {
     defaultObfuscationEnv 'searge'
-    add sourceSets.main, 'mixins.lite.refmap.json'
+    add sourceSets.main, 'mixins.machinelite.refmap.json'
 }
 
 processResources {
@@ -115,11 +115,11 @@ processResources {
 jar {
     manifest.attributes(
             'Manifest-Version': 1.0,
-            'MixinConfigs': 'mixins.lite.json',
+            'MixinConfigs': 'mixins.machinelite.json',
             'TweakClass': 'org.spongepowered.asm.launch.MixinTweaker',
             'TweakOrder': 0,
             'FMLCorePluginContainsFMLMod': 'true',
-            'FMLCorePlugin': 'com.lite.machinelite.mixin.MixinLoaderForge',
+            'FMLCorePlugin': 'dev.rabies.machinelite.mixin.MixinLoaderForge',
             'ForceLoadAsMod': 'true'
     )
 

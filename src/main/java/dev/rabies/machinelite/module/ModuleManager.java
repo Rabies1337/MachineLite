@@ -1,16 +1,14 @@
 package dev.rabies.machinelite.module;
 
-import com.lite.machinelite.module.impl.*;
-import dev.rabies.machinelite.module.impl.*;
+import dev.rabies.machinelite.module.modules.*;
+import lombok.Getter;
 
 import java.util.ArrayList;
 
 public class ModuleManager {
-    private final ArrayList<Module> modules;
 
-    public ModuleManager() {
-        modules = new ArrayList<>();
-    }
+    @Getter
+    private final ArrayList<Module> modules = new ArrayList<>();
 
     public void initialize() {
         registerModule(new BuildRandom("BuildRandom", 0));
@@ -35,31 +33,18 @@ public class ModuleManager {
         return (module != null && module.isEnabled());
     }
 
-    public ArrayList<Module> getModules() {
-        return modules;
-    }
-
     public Module getModuleByString(String name) {
-        try {
-            for (Module feature : this.modules) {
-                if (feature.getName().toLowerCase().replaceAll(" ", "").equals(name.toLowerCase())) {
-                    return feature;
-                }
-            }
-        } catch (Exception exception) {
-            return null;
+        for (Module feature : modules) {
+            if (!feature.getName().equalsIgnoreCase(name)) continue;
+            return feature;
         }
         return null;
     }
 
     public Module getModuleByClass(Class<?> clazz) {
-        try {
-            for (Module feature : this.modules) {
-                if (feature.getClass() == clazz) {
-                    return feature;
-                }
-            }
-        } catch (Exception ignored) {
+        for (Module feature : modules) {
+            if (feature.getClass() != clazz) continue;
+            return feature;
         }
         return null;
     }

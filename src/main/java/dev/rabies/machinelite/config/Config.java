@@ -1,18 +1,18 @@
 package dev.rabies.machinelite.config;
 
-import dev.rabies.machinelite.MachineLite;
+import dev.rabies.machinelite.MachineLiteMod;
 import dev.rabies.machinelite.module.Module;
 import dev.rabies.machinelite.utils.IMC;
 
 import java.io.*;
 import java.util.ArrayList;
 
-public class Profile {
+public class Config {
 
     private final File data;
 
-    public Profile() {
-        File directory = new File(IMC.mc.gameDir, MachineLite.CLIENT_NAME);
+    public Config() {
+        File directory = new File(IMC.mc.gameDir, MachineLiteMod.CLIENT_NAME);
         if (!directory.exists()) directory.mkdir();
 
         data = new File(directory, "data.txt");
@@ -24,9 +24,9 @@ public class Profile {
         }
     }
 
-    public void saveFile() {
+    public void saveConfig() {
         ArrayList<String> toSaves = new ArrayList<>();
-        MachineLite.getModuleManager().getModules().forEach(module -> toSaves.add(String.format("Module:%s:%s:%s", module.getName(), module.getKeyCode(), module.isEnabled())));
+        MachineLiteMod.getModuleManager().getModules().forEach(module -> toSaves.add(String.format("Module:%s:%s:%s", module.getName(), module.getKeyCode(), module.isEnabled())));
 
         try {
             PrintWriter pw = new PrintWriter(this.data);
@@ -37,7 +37,7 @@ public class Profile {
         }
     }
 
-    public void loadFile() throws Exception {
+    public void loadConfig() throws Exception {
         ArrayList<String> lines = new ArrayList<>();
         BufferedReader br = new BufferedReader(new FileReader(this.data));
         String line;
@@ -50,7 +50,7 @@ public class Profile {
             String[] split = s.split(":");
 
             if (s.startsWith("Module:") && split.length > 3) {
-                Module module = MachineLite.getModuleManager().getModuleByString(split[1]);
+                Module module = MachineLiteMod.getModuleManager().getModuleByString(split[1]);
                 if (module != null) {
                     module.setKeyCode(Integer.parseInt(split[2]));
 

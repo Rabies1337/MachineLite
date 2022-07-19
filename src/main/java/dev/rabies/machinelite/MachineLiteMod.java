@@ -2,10 +2,11 @@ package dev.rabies.machinelite;
 
 import dev.rabies.machinelite.command.Command;
 import dev.rabies.machinelite.command.CommandManager;
-import dev.rabies.machinelite.config.Profile;
+import dev.rabies.machinelite.config.Config;
 import dev.rabies.machinelite.event.EventManager;
 import dev.rabies.machinelite.module.ModuleManager;
 import dev.rabies.machinelite.utils.IMC;
+import lombok.Getter;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.util.text.ChatType;
 import net.minecraft.util.text.TextComponentString;
@@ -22,25 +23,29 @@ import org.lwjgl.input.Keyboard;
 import java.util.Arrays;
 
 @Mod(
-        modid = MachineLite.CLIENT_ID,
-        name = MachineLite.CLIENT_NAME,
-        version = MachineLite.CLIENT_VERSION
+        modid = MachineLiteMod.CLIENT_ID,
+        name = MachineLiteMod.CLIENT_NAME,
+        version = MachineLiteMod.CLIENT_VERSION
 )
-public class MachineLite implements IMC {
+public class MachineLiteMod implements IMC {
 
     public final static String CLIENT_ID = "machinelite";
     public final static String CLIENT_NAME = "MachineLite";
     public final static String CLIENT_VERSION = "v1.7";
     private boolean helpNotifier;
 
+    @Getter
     private static EventManager eventManager;
+    @Getter
     private static ModuleManager moduleManager;
+    @Getter
     private static CommandManager commandManager;
-    private static Profile profile;
+    @Getter
+    private static Config config;
 
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event) {
-        profile = new Profile();
+        config = new Config();
         eventManager = new EventManager();
         moduleManager = new ModuleManager();
         commandManager = new CommandManager();
@@ -50,10 +55,9 @@ public class MachineLite implements IMC {
     public void init(FMLInitializationEvent event) throws Exception {
         MinecraftForge.EVENT_BUS.register(this);
 
-        eventManager.initialize();
         moduleManager.initialize();
         commandManager.initialize();
-        profile.loadFile();
+        config.loadConfig();
 
         helpNotifier = true;
     }
@@ -85,43 +89,26 @@ public class MachineLite implements IMC {
     @SubscribeEvent
     public void chatEvent(ClientChatEvent event) {
         String message = event.getMessage();
+        if (!message.startsWith(".")) return;
 
-        if (message.startsWith(".")) {
-            String[] commandBits = message.substring(".".length()).split(" ");
-            String commandName = commandBits[0];
-            Command command = commandManager.getCommand(commandName);
-            if (command != null) {
-                if (commandBits.length > 1) {
-                    String[] commandArguments = Arrays.copyOfRange(commandBits, 1, commandBits.length);
-                    command.fire(commandArguments);
-                } else {
-                    command.fire(null);
-                }
-            } else {
-                MachineLite.WriteChat("\247cInvalid Command");
-            }
-
-            event.setCanceled(true);
+        String[] bits = message.substring(".".length()).split(" ");
+        Command command = commandManager.getCommand(bits[0]);
+        if (command == null) {
+            MachineLiteMod.writeChat("\247cInvalid Command");
+            return;
         }
+
+        if (bits.length > 1) {
+            String[] args = Arrays.copyOfRange(bits, 1, bits.length);
+            command.fire(args);
+        } else {
+            command.fire(null);
+        }
+
+        event.setCanceled(true);
     }
 
-    public static void WriteChat(Object message) {
+    public static void writeChat(Object message) {
         mc.ingameGUI.addChatMessage(ChatType.SYSTEM, new TextComponentString("\2477[\2475Machine \247fLite\2477] \247f" + message.toString()));
-    }
-
-    public static Profile getProfile() {
-        return profile;
-    }
-
-    public static CommandManager getCommandManager() {
-        return commandManager;
-    }
-
-    public static ModuleManager getModuleManager() {
-        return moduleManager;
-    }
-
-    public static EventManager getEventManager() {
-        return eventManager;
     }
 }

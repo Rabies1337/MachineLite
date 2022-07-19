@@ -1,7 +1,7 @@
 {
   "verbose": false,
   "compatibilityLevel": "JAVA_8",
-  "package": "com.lite.machinelite.mixin.client",
+  "package": "dev.rabies.machinelite.mixin.client",
   "refmap": "mixins.lite.refmap.json",
   "mixins": [
     "IMixinMapData",

@@ -11,20 +11,8 @@ public class TimerUtil {
         this.prevMS = getTime();
     }
 
-    public void reset(long offset) {
-        this.prevMS = getTime() + offset;
-    }
-
     public long getTime() {
         return System.nanoTime() / 1000000L;
-    }
-
-    public long getDifference() {
-        return getTime() - this.prevMS;
-    }
-
-    public void setDifference(long difference) {
-        this.prevMS = getTime() - difference;
     }
 
     private double getIncremental(double val, double inc) {
